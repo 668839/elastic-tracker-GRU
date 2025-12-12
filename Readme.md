@@ -1,7 +1,9 @@
+
+本项目在Elastic-Tracker的基础上添加了GRU进行目标预测从而加强了跟踪
 # Elastic-Tracker部署指南
 
 本文档是部署Elastic-Tracker到无人机上并进行仿真与实际验证的指南。  
-说明文档由 张子宇 撰写。
+
 
 ## 简 介
 [Elastic-Tracker](https://github.com/ZJU-FAST-Lab/Elastic-Tracker) 是一个灵活的轨迹规划框架，能够以保证安全和可见性的方式处理具有挑战性的跟踪任务。  
