@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="planning" type="simple_tracker_node" name="simple_tracker_node" output="screen">
+      <remap from="/vins_fusion/imu_propagate" to="/vins_fusion/imu_propagate"/>
+      
+      <remap from="/mavros/setpoint_raw/local" to="/mavros/setpoint_raw/local"/>
+  </node>
+
+</launch>

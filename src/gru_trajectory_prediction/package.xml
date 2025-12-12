@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gru_trajectory_prediction</name>
+  <version>0.1.0</version>
+  <description>Lightweight GRU-based trajectory prediction with uncertainty quantification for UAV target tracking</description>
+  
+  <!-- Maintainer -->
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  
+  <!-- License -->
+  <license>MIT</license>
+  
+  <!-- Build tool -->
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!-- ============================================ -->
+  <!-- ROS Core Dependencies -->
+  <!-- ============================================ -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>eigen_conversions</build_depend>
+  
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <build_export_depend>visualization_msgs</build_export_depend>
+  <build_export_depend>tf</build_export_depend>
+  <build_export_depend>eigen_conversions</build_export_depend>
+  
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>eigen_conversions</exec_depend>
+  
+  <!-- ============================================ -->
+  <!-- Mapping Dependencies (for collision checking) -->
+  <!-- ============================================ -->
+  <build_depend>mapping</build_depend>
+  <build_depend>quadrotor_msgs</build_depend>
+  
+  <build_export_depend>mapping</build_export_depend>
+  <build_export_depend>quadrotor_msgs</build_export_depend>
+  
+  <exec_depend>mapping</exec_depend>
+  <exec_depend>quadrotor_msgs</exec_depend>
+  
+  <!-- ============================================ -->
+  <!-- Python Dependencies -->
+  <!-- ============================================ -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  
+  <!-- Export -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+  </export>
+</package>

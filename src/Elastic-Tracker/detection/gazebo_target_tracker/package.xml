@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gazebo_target_tracker</name>
+  <version>1.0.0</version>
+  <description>Simple target tracker using Gazebo model states</description>
+
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>mavros_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+</package>

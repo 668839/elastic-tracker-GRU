@@ -1,0 +1,16 @@
+{
+  "data_path": "data/processed_data.npz",
+  "model_size": "medium",
+  "epochs": 150,
+  "batch_size": 64,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "dropout": 0.2,
+  "use_augmentation": true,
+  "num_params": 591170,
+  "train_samples": 30099,
+  "val_samples": 6450,
+  "obs_len": 30,
+  "pred_len": 60,
+  "start_time": "2025-12-10T10:48:40.236045"
+}

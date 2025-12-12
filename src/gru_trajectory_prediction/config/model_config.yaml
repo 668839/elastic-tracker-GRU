@@ -1,0 +1,38 @@
+# GRU模型配置
+model:
+  input_dim: 4          # [x, y, vx, vy]
+  hidden_dim: 64        # Student模型隐藏层维度
+  num_layers: 2
+  output_dim: 2         # [x, y]
+  obs_len: 30           # 观测长度：1秒@30Hz
+  pred_len: 60          # 预测长度：2秒@30Hz
+  dropout: 0.3          # MC Dropout概率
+
+# MC Dropout采样
+mc_dropout:
+  n_samples: 3          # 采样次数（实时性优化）
+  enabled: true
+
+# 卡尔曼融合
+kalman:
+  dt: 0.033             # 时间步长（30Hz）
+  process_noise: 0.1
+  base_measurement_noise: 0.3
+  fusion_alpha: 0.7     # GRU基础权重
+  fusion_beta: 0.5      # 不确定性敏感度
+
+# 碰撞检测
+collision:
+  check_interval: 3     # 每隔3个预测点检测一次
+  search_radius_base: 0.5  # 修正搜索半径基础值
+  uncertainty_scale: 2.0   # 不确定性缩放因子
+
+# 路径
+paths:
+  model_path: "$(find gru_trajectory_prediction)/models/best_student_quantized.pt"
+  
+# ROS话题
+topics:
+  target_odom: "/target_ekf_node/target_odom"
+  gru_prediction: "/gru_prediction"
+  gridmap_inflate: "/gridmap_inflate"

@@ -1,0 +1,25 @@
+<!-- 
+  collect_gazebo_data.launch
+  
+  从Gazebo仿真环境收集actor轨迹数据
+  订阅: /gazebo/model_states
+  
+  使用方法:
+    roslaunch trajectory_prediction collect_gazebo_data.launch
+    roslaunch trajectory_prediction collect_gazebo_data.launch target_name:=actor2
+-->
+
+<launch>
+  <!-- 参数 -->
+  <arg name="target_name" default="actor1" doc="Gazebo中目标模型的名称"/>
+  <arg name="output_dir" default="$(find trajectory_prediction)/data/gazebo_raw" doc="数据保存目录"/>
+  <arg name="duration" default="60" doc="收集时长(分钟)"/>
+  
+  <!-- Gazebo数据收集节点 (Python) -->
+  <node name="gazebo_actor_collector" pkg="trajectory_prediction" type="collect_gazebo_actor.py" output="screen">
+    <param name="target_name" value="$(arg target_name)"/>
+    <param name="output_dir" value="$(arg output_dir)"/>
+    <param name="duration" value="$(arg duration)"/>
+  </node>
+  
+</launch>

@@ -1,0 +1,24 @@
+<!-- launch/prediction_node.launch -->
+<launch>
+  <!-- 参数配置 -->
+  <rosparam command="load" file="$(find gru_trajectory_prediction)/config/model_config.yaml"/>
+  
+  <!-- Python GRU推理服务 -->
+  <node name="gru_server" pkg="gru_trajectory_prediction" type="gru_server.py" output="screen">
+    <param name="model_path" value="$(find gru_trajectory_prediction)/models/best_student_quantized.pt"/>
+    <param name="obs_len" value="30"/>
+    <param name="pred_len" value="60"/>
+    <param name="mc_samples" value="3"/>
+  </node>
+  
+  <!-- Kalman融合节点 -->
+  <node name="kalman_fusion" pkg="gru_trajectory_prediction" type="kalman_fusion.py" output="screen">
+    <param name="base_measurement_noise" value="0.3"/>
+    <param name="fusion_alpha" value="0.7"/>
+    <param name="fusion_beta" value="0.5"/>
+  </node>
+  
+  <!-- C++ 客户端节点（可选，用于测试） -->
+  <node name="gru_client" pkg="gru_trajectory_prediction" type="gru_prediction_client_node" output="screen"/>
+  
+</launch>

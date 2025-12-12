@@ -1,0 +1,28 @@
+<!-- launch/visualization.launch -->
+<launch>
+  <!-- 轨迹可视化 -->
+  <node name="trajectory_visualizer" 
+        pkg="gru_trajectory_prediction" 
+        type="trajectory_visualizer.py" 
+        output="screen"/>
+  
+  <!-- 不确定性热力图 -->
+  <node name="uncertainty_visualizer" 
+        pkg="gru_trajectory_prediction" 
+        type="uncertainty_visualizer.py" 
+        output="screen"/>
+  
+  <!-- 性能监控 -->
+  <node name="performance_monitor" 
+        pkg="gru_trajectory_prediction" 
+        type="performance_monitor.py" 
+        output="screen"/>
+  
+  <!-- 启动RViz -->
+  <node name="rviz" 
+        pkg="rviz" 
+        type="rviz" 
+        args="-d $(find gru_trajectory_prediction)/rviz/prediction_visualization.rviz"
+        required="true"/>
+  
+</launch>

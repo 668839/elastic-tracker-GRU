@@ -1,0 +1,143 @@
+<launch>
+  <!-- 
+    使用Gazebo Ground Truth进行目标跟踪的launch文件 (V7)
+    
+    ★★★ 重要：跟踪默认是禁用的！★★★
+    
+    使用步骤：
+    1. 启动此launch文件
+    2. 等待无人机起飞并稳定悬停（观察终端输出"VINS STABLE - ready"）
+    3. 在另一个终端执行启用命令：
+       rostopic pub /gazebo_target_node/enable std_msgs/Bool "data: true" -1
+    4. 无人机开始跟踪目标
+    
+    禁用跟踪：
+       rostopic pub /gazebo_target_node/enable std_msgs/Bool "data: false" -1
+  -->
+
+  <!-- ==================== Gazebo目标位置发布节点 ==================== -->
+  <node name="gazebo_target_node" pkg="target_ekf" type="gazebo_target_node" output="screen">
+    <!-- 目标模型名称 -->
+    <param name="target_model_name" value="hatchback_red"/>
+    <!-- 无人机模型名称 -->
+    <param name="drone_model_name" value="iris"/>
+    
+    <!-- EKF参数 -->
+    <param name="use_ekf" value="true"/>
+    <param name="ekf_rate" value="30"/>
+    
+    <!-- 距离限制 -->
+    <param name="max_tracking_dist" value="15.0"/>
+    
+    <!-- VINS稳定性检测阈值(米) -->
+    <param name="stability_threshold" value="0.3"/>
+    
+    <!-- 话题映射 -->
+    <remap from="~target_odom" to="/target_ekf_node/target_odom"/>
+    <remap from="~raw_odom" to="/target_ekf_node/yolo_odom"/>
+    <remap from="~odom" to="/vins_fusion/imu_propagate"/>
+    <!-- enable话题: /gazebo_target_node/enable -->
+  </node>
+
+  <!-- ==================== Nodelet Manager ==================== -->
+  <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+    <param name="num_worker_threads" value="16"/>
+  </node>
+    
+  <!-- ==================== Mapping模块 ==================== -->
+  <node pkg="nodelet" type="nodelet" name="mapping" args="load mapping/Nodelet manager" output="screen">
+    <!-- 相机参数 -->
+    <rosparam command="load" file="$(find mapping)/config/D435.yaml" />
+    
+    <!-- 话题映射 -->
+    <remap from="~odom" to="/vins_fusion/imu_propagate"/>
+    <remap from="~depth" to="/d435i/depth/image_raw"/>
+    <remap from="~extrinsic" to="/vins_fusion/extrinsic"/>
+    <remap from="~gridmap" to="/gridmap"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <remap from="~target" to="/target_ekf_node/target_odom"/>
+      
+    <!-- 深度滤波参数 -->
+    <param name="down_sample_factor" value="2"/>
+    <param name="depth_filter_tolerance" value="0.15"/>
+    <param name="depth_filter_mindist" value="0.2"/>
+    <param name="depth_filter_margin" value="2"/>
+    
+    <!-- 光线投射参数 -->
+    <param name="p_min" value="-199"/>
+    <param name="p_max" value=" 220"/>
+    <param name="p_hit" value="  62"/>
+    <param name="p_mis" value="  62"/>
+    <param name="p_occ" value=" 139"/>
+    <param name="p_def" value="-199"/>
+    
+    <!-- 地图参数 -->
+    <param name="resolution" value="0.15"/>
+    <param name="local_x" value="20"/>
+    <param name="local_y" value="20"/>
+    <param name="local_z" value="5"/>
+    <param name="inflate_size" value="1"/>
+    
+    <!-- 目标遮罩 -->
+    <param name="use_mask" value="true"/>
+    <param name="mask_x" value="0.2"/>
+    <param name="mask_y" value="0.2"/>
+    <param name="mask_z" value="1.0"/>
+      
+    <param name="use_global_map" value="false"/>
+  </node>
+
+  <!-- ==================== Planning模块 ==================== -->
+  <node pkg="nodelet" type="nodelet" name="planning" args="load planning/Nodelet manager" output="screen">
+    <!-- 话题映射 -->
+    <remap from="~odom" to="/vins_fusion/imu_propagate"/>
+    <remap from="~gridmap_inflate" to="/gridmap_inflate"/>
+    <remap from="~heartbeat" to="/heartbeat"/>
+    <remap from="~trajectory" to="/trajectory"/>
+    <remap from="~replanState" to="/replanState"/>
+    <remap from="~target" to="/target_ekf_node/target_odom"/>
+    <remap from="~triger" to="/triger"/>
+    <remap from="~PX4_state" to="/mavros/state"/>
+    <remap from="~land_triger" to="/land_triger"/>
+
+    <!-- 规划参数 -->
+    <param name="plan_hz" value="30"/>
+    <param name="K" value="8"/>
+    
+    <!-- 运动约束 -->
+    <param name="vmax" value="1.0"/>
+    <param name="amax" value="2.0"/>
+    
+    <!-- 优化权重 -->
+    <param name="rhoT" value="100.0"/>
+    <param name="rhoP" value="10000.0"/>
+    <param name="rhoV" value="1000.0"/>
+    <param name="rhoA" value="1000.0"/>
+    <param name="rhoTracking" value="1000.0"/>
+    <param name="rhosVisibility" value="10000.0"/>
+    
+    <!-- 跟踪参数 -->
+    <param name="theta_clearance" value="0.8"/>
+    <param name="clearance_d" value="0.2"/>
+    <param name="tolerance_d" value="0.3"/>
+    <param name="tolerance_yaw" value="0.2"/>
+    <param name="tracking_dist" value="2.5"/>
+    <param name="tracking_dur" value="3.0"/>
+    <param name="tracking_dt" value="0.2"/>
+    
+    <param name="debug" value="false"/>
+
+    <!-- 预测参数 -->
+    <param name="prediction/rho_a" value="1.0"/>
+    <param name="prediction/vmax" value="5.0"/>
+  </node>
+  
+  <!-- ==================== 轨迹服务器 ==================== -->
+  <node pkg="planning" name="traj_server" type="traj_server" output="screen">
+    <remap from="~position_cmd" to="/mavros/setpoint_raw/local"/>
+    <remap from="~trajectory" to="/trajectory"/>
+    <remap from="~heartbeat" to="/heartbeat"/>
+    <param name="time_forward" value="1.0" type="double"/>
+  </node>
+
+</launch>

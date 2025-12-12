@@ -1,0 +1,17 @@
+{
+  "data_path": "data/processed_data.npz",
+  "save_dir": "checkpoints/model_v2",
+  "model_size": "small",
+  "epochs": 100,
+  "batch_size": 64,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "dropout": 0.2,
+  "patience": 15,
+  "use_augmentation": true,
+  "device": "cuda",
+  "seed": 42,
+  "num_params": 75682,
+  "train_samples": 30099,
+  "val_samples": 6450
+}

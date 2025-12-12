@@ -1,0 +1,13 @@
+<launch>
+    <arg name="drone_name" default="iris"/>
+    <arg name="target_name" default="actor1"/>
+
+    <node pkg="simple_chase" type="gazebo_fake_localization" name="fake_localization" output="screen">
+        <param name="drone_name" value="$(arg drone_name)"/>
+    </node>
+
+    <node pkg="simple_chase" type="simple_car_tracker" name="tracker" output="screen">
+        <param name="target_name" value="$(arg target_name)"/>
+        <param name="drone_name" value="$(arg drone_name)"/>
+    </node>
+</launch>

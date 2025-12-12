@@ -1,0 +1,69 @@
+<!--
+  simple_tracker.launch
+  简单目标跟踪的启动文件
+  
+  该launch文件启动两个节点：
+  1. gazebo_target_tracker_node: 从Gazebo获取目标位置并转换坐标系
+  2. simple_follower_node: 计算跟随点并发送控制指令
+  
+  使用方法：
+  1. 先启动Gazebo仿真（roslaunch px4 mavros_posix_sitl.launch）
+  2. 启动VINS（roslaunch vins Drone_gazebo.launch）
+  3. 启动本文件（roslaunch gazebo_target_tracker simple_tracker.launch）
+-->
+<launch>
+
+  <!-- ============== 参数配置 ============== -->
+  
+  <!-- 目标模型名称（Gazebo中的模型名） -->
+  <arg name="target_name" default="hatchback_red"/>
+  
+  <!-- 无人机模型名称（Gazebo中的模型名） -->
+  <arg name="drone_name" default="iris"/>
+  
+  <!-- 跟随距离（米）：无人机与目标之间的距离 -->
+  <arg name="tracking_distance" default="1.5"/>
+  
+  <!-- 跟随高度（米）：相对于目标的高度 -->
+  <arg name="tracking_height" default="1.2"/>
+  
+  <!-- 最大飞行速度（米/秒） -->
+  <arg name="max_velocity" default="1.5"/>
+  
+
+  <!-- ============== Gazebo目标跟踪节点 ============== -->
+  <!-- 从Gazebo获取目标位置，转换到VINS坐标系 -->
+  <node name="gazebo_target_tracker_node" pkg="gazebo_target_tracker" 
+        type="gazebo_target_tracker_node" output="screen">
+    
+    <!-- 参数 -->
+    <param name="target_model_name" value="$(arg target_name)"/>
+    <param name="drone_model_name" value="$(arg drone_name)"/>
+    <param name="publish_rate" value="30.0"/>
+    <param name="max_offset_samples" value="30"/>
+    
+    <!-- 话题重映射（如果需要） -->
+    <!-- <remap from="/vins_fusion/imu_propagate" to="/your_odom_topic"/> -->
+  </node>
+
+
+  <!-- ============== 简单跟随控制器节点 ============== -->
+  <!-- 计算跟随点并发送控制指令 -->
+  <node name="simple_follower_node" pkg="gazebo_target_tracker" 
+        type="simple_follower_node" output="screen">
+    
+    <!-- 跟踪参数 -->
+    <param name="tracking_distance" value="$(arg tracking_distance)"/>
+    <param name="tracking_height" value="$(arg tracking_height)"/>
+    <param name="max_velocity" value="$(arg max_velocity)"/>
+    
+    <!-- 控制参数 -->
+    <param name="control_rate" value="30.0"/>
+    <param name="position_gain" value="1.0"/>
+    <param name="yaw_rate_limit" value="0.8"/>
+    
+    <!-- 订阅gazebo_target_tracker发布的目标位置 -->
+    <remap from="target_odom" to="gazebo_target_tracker_node/target_odom"/>
+  </node>
+
+</launch>

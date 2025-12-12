@@ -1,0 +1,67 @@
+# 对比视图配置 - 并排显示GRU vs Kalman vs 融合
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /GRU Only1
+        - /Kalman Only1
+        - /Fused1
+      Splitter Ratio: 0.3
+    Tree Height: 400
+
+Visualization Manager:
+  Displays:
+    # 网格
+    - Class: rviz/Grid
+      Name: Grid
+      Value: true
+    
+    # ========== GRU组 ==========
+    - Class: rviz/Group
+      Name: GRU Only
+      Displays:
+        - Class: rviz/MarkerArray
+          Marker Topic: /trajectory_markers
+          Name: GRU Trajectory
+          Namespaces:
+            gru_prediction: true
+            gru_points: true
+          Value: true
+    
+    # ========== Kalman组 ==========
+    - Class: rviz/Group
+      Name: Kalman Only
+      Displays:
+        - Class: rviz/Marker
+          Marker Topic: /kalman_prediction_marker
+          Name: Kalman Trajectory
+          Value: true
+    
+    # ========== 融合组 ==========
+    - Class: rviz/Group
+      Name: Fused
+      Displays:
+        - Class: rviz/MarkerArray
+          Marker Topic: /trajectory_markers
+          Name: Fused Trajectory
+          Namespaces:
+            fused_prediction: true
+            uncertainty: true
+          Value: true
+    
+    # 真实轨迹（所有视图共享）
+    - Class: rviz/Path
+      Color: 255; 0; 0
+      Name: Ground Truth
+      Topic: /ground_truth_path
+      Value: true
+  
+  Views:
+    Current:
+      Class: rviz/ThirdPersonFollower
+      Distance: 10
+      Enable Stereo Rendering:
+        Value: false
+      Target Frame: world
+      Value: ThirdPersonFollower (rviz)

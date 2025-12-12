@@ -1,0 +1,20 @@
+============================================================
+Data Collection Report
+============================================================
+Collection time: 2025-11-24 09:25:53.664836
+Target: actor1
+
+Total trajectories: 41
+This session: 14
+
+Data Quality:
+  Avg duration: 104.19s
+  Avg speed: 0.19 m/s
+  Avg displacement: 48.13m
+  Avg straightness: 0.75
+
+Trajectory types:
+  Straight (>0.95): 7
+  Slight curve (0.7-0.95): 3
+  Curve (0.5-0.7): 0
+  Complex (<0.5): 4

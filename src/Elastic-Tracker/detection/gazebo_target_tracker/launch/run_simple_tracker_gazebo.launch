@@ -1,0 +1,55 @@
+<!--
+  run_simple_tracker_gazebo.launch
+  完整的简单跟踪仿真启动文件
+  
+  该文件启动：
+  1. gazebo_target_tracker_node: 从Gazebo获取目标位置
+  2. simple_follower_node: 简单跟随控制器
+  
+  注意：需要先启动以下组件：
+  - Gazebo仿真 (roslaunch px4 mavros_posix_sitl.launch)
+  - VINS定位 (roslaunch vins Drone_gazebo.launch)
+  
+  使用方法：
+  roslaunch gazebo_target_tracker run_simple_tracker_gazebo.launch
+-->
+<launch>
+
+  <!-- ============== 参数配置 ============== -->
+  <arg name="target_name" default="hatchback_red"/>
+  <arg name="drone_name" default="iris"/>
+  <arg name="tracking_distance" default="1.5"/>
+  <arg name="tracking_height" default="1.2"/>
+  <arg name="max_velocity" default="1.5"/>
+  
+
+  <!-- ============== Gazebo目标跟踪节点 ============== -->
+  <node name="gazebo_target_tracker_node" pkg="gazebo_target_tracker" 
+        type="gazebo_target_tracker_node" output="screen">
+    <param name="target_model_name" value="$(arg target_name)"/>
+    <param name="drone_model_name" value="$(arg drone_name)"/>
+    <param name="publish_rate" value="30.0"/>
+    <param name="max_offset_samples" value="30"/>
+  </node>
+
+
+  <!-- ============== 简单跟随控制器 ============== -->
+  <node name="simple_follower_node" pkg="gazebo_target_tracker" 
+        type="simple_follower_node" output="screen">
+    <param name="tracking_distance" value="$(arg tracking_distance)"/>
+    <param name="tracking_height" value="$(arg tracking_height)"/>
+    <param name="max_velocity" value="$(arg max_velocity)"/>
+    <param name="control_rate" value="30.0"/>
+    <param name="position_gain" value="1.0"/>
+    <param name="yaw_rate_limit" value="0.8"/>
+    <remap from="target_odom" to="gazebo_target_tracker_node/target_odom"/>
+  </node>
+
+
+  <!-- ============== RViz可视化（可选） ============== -->
+  <!-- 
+  <node name="rviz" pkg="rviz" type="rviz" 
+        args="-d $(find gazebo_target_tracker)/rviz/tracker.rviz"/>
+  -->
+
+</launch>

@@ -1,0 +1,26 @@
+<!-- data_collection.launch -->
+<!-- 用于在Gazebo仿真中收集目标轨迹数据 -->
+
+<launch>
+    <!-- 数据保存路径 -->
+    <arg name="save_path" default="$(find trajectory_prediction)/data/raw_trajectories.csv"/>
+    
+    <!-- 数据收集参数 -->
+    <arg name="min_velocity_threshold" default="0.05"/>  <!-- m/s, 最小速度阈值 -->
+    <arg name="max_position_jump" default="1.0"/>        <!-- m, 最大位置跳变 -->
+    <arg name="sample_rate" default="30.0"/>             <!-- Hz, 采样率 -->
+    
+    <!-- 数据收集节点 -->
+    <node name="data_collector" pkg="trajectory_prediction" type="data_collector_node" output="screen">
+        <param name="save_path" value="$(arg save_path)"/>
+        <param name="min_velocity_threshold" value="$(arg min_velocity_threshold)"/>
+        <param name="max_position_jump" value="$(arg max_position_jump)"/>
+        <param name="sample_rate" value="$(arg sample_rate)"/>
+        
+        <!-- 重映射话题 (根据你的实际话题名称调整) -->
+        <remap from="/target_ekf_node/target_odom" to="/target_ekf_node/target_odom"/>
+    </node>
+    
+    <!-- 可视化 (可选) -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find trajectory_prediction)/rviz/data_collection.rviz"/> -->
+</launch>

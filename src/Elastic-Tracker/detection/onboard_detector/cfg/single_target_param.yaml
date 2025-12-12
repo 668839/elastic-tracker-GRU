@@ -1,0 +1,86 @@
+# cfg/single_target_param.yaml
+# 单目标选择器参数配置
+
+# ========== 选择策略配置 ==========
+# 可选值: "human_first", "nearest", "largest", "human_nearest", "dynamic_first"
+selection_strategy: "human_nearest"
+
+# 是否必须选择人体目标(如果为true，只跟踪人体；如果为false，可以跟踪任何动态障碍物）
+require_human: true
+
+# ========== 跟踪参数 ==========
+# 位置相似度阈值 (米) - 当前目标与上一帧目标位置差异的最大允许值
+distance_threshold: 2.0
+
+# 速度相似度阈值 (米/秒) - 当前目标与上一帧目标速度差异的最大允许值
+velocity_threshold: 1.0
+
+# 跟踪超时时间 (秒) - 超过此时间未检测到目标将重置跟踪
+timeout: 3.0
+
+# 最小置信度阈值 - 低于此值的检测将被忽略
+min_confidence: 0.3
+
+# 历史队列大小 - 用于速度估计和跟踪稳定性
+history_size: 10
+
+# 是否使用速度预测辅助跟踪
+use_velocity_prediction: true
+
+# 目标丢失重试机制
+max_lost_count: 5  # 允许连续丢失的最大次数，超过后重置跟踪
+
+# ========== 相似度计算权重 ==========
+# 这些权重用于计算目标相似度，总和应为1.0
+weight_position: 0.5    # 位置权重
+weight_velocity: 0.3    # 速度权重
+weight_size: 0.2        # 尺寸权重
+
+# ========== 深度范围限制 ==========
+# 只考虑在此深度范围内的目标
+min_depth: 0.5   # 最小深度 (米)
+max_depth: 10.0  # 最大深度 (米)
+
+# ========== 相机参数 ==========
+# D435 Gazebo仿真参数（与target_ekf保持一致）
+fx: 608.0
+fy: 608.0
+cx: 320.0
+cy: 240.0
+
+# 图像尺寸
+img_width: 640
+img_height: 480
+
+# 注意：真实D435相机参数可能不同，请根据实际情况调整
+# 真实D435参考参数（640x480）：
+# fx: 615.0
+# fy: 615.0
+# cx: 320.0
+# cy: 240.0
+
+# ========== body到camera的外参矩阵 ==========
+# 这个外参应该与onboard_detector的detector_param.yaml中的body_to_camera_color保持一致
+# 格式：4x4变换矩阵，按行展开为16个元素
+# body_to_camera: [R11, R12, R13, tx,
+#                  R21, R22, R23, ty,
+#                  R31, R32, R33, tz,
+#                  0,   0,   0,   1]
+
+# D435i默认配置（相机朝前，安装在机体中心）
+body_to_camera: [
+  0.0, 0.0, 1.0, 0.0,
+  -1.0, 0.0, 0.0, 0.0,
+  0.0, -1.0, 0.0, 0.0,
+  0.0, 0.0, 0.0, 1.0
+]
+
+# ========== 调试选项 ==========
+# 是否发布可视化marker
+enable_visualization: true
+
+# 是否打印调试信息
+verbose: true
+
+# 日志输出频率限制（Hz）
+log_throttle_rate: 1.0

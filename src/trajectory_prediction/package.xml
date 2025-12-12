@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>trajectory_prediction</name>
+  <version>1.0.0</version>
+  <description>
+    Uncertainty-aware trajectory prediction with knowledge distillation
+    for UAV target tracking. Implements lightweight GRU with MC Dropout
+    and adaptive Kalman fusion.
+    
+    Supports two data collection modes:
+    - Simulation: Subscribe to Gazebo /gazebo/model_states for actor position
+    - Real-world: Subscribe to /target_ekf_node/target_odom from EKF
+  </description>
+
+  <maintainer email="your@email.com">Your Name</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>message_generation</depend>
+  <depend>message_runtime</depend>
+
+  <export>
+  </export>
+</package>

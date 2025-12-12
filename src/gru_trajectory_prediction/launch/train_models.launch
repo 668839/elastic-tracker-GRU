@@ -1,0 +1,18 @@
+<!-- launch/train_models.launch -->
+<!-- 完整的训练流程 -->
+<launch>
+  <arg name="data_dir" default="$(find gru_trajectory_prediction)/data/processed_data"/>
+  <arg name="checkpoint_dir" default="$(find gru_trajectory_prediction)/checkpoints"/>
+  
+  <!-- 步骤1: 训练Teacher -->
+  <node name="train_teacher" pkg="gru_trajectory_prediction" type="step1_train_teacher.py" output="screen" args="
+    --data_dir $(arg data_dir)
+    --save_dir $(arg checkpoint_dir)/teacher
+    --epochs 100
+    --batch_size 64
+  "/>
+  
+  <!-- 注意：下面的步骤需要按顺序手动运行，因为它们依赖上一步的输出 -->
+  <!-- 使用rosrun命令单独运行每个步骤 -->
+  
+</launch>
